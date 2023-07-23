@@ -1,6 +1,9 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+base_ip = 10
+pod_count = 1
+
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
 # backwards compatibility). Please don't change it unless you know what
@@ -9,8 +12,6 @@ Vagrant.configure("2") do |config|
   # The most common configuration options are documented and commented below.
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
-
-  config.vm.hostname = "practice.local"
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
@@ -34,7 +35,7 @@ Vagrant.configure("2") do |config|
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
-  config.vm.network "private_network", ip: "192.168.35.10"
+  # config.vm.network "private_network", ip: "192.168.35.10"
 
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
@@ -45,7 +46,7 @@ Vagrant.configure("2") do |config|
   # the path on the host to the actual folder. The second argument is
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
-  config.vm.synced_folder ".", "/vagrant", type: "rsync", rsync__exclude: [".git/"]
+  # config.vm.synced_folder ".", "/vagrant", type: "rsync", rsync__exclude: [".git/"]
 
   # Disable the default share of the current code directory. Doing this
   # provides improved isolation between the vagrant box and your host
@@ -61,9 +62,9 @@ Vagrant.configure("2") do |config|
   config.vm.provider "virtualbox" do |vb|
   #   # Display the VirtualBox GUI when booting the machine
   #   vb.gui = true
-  #
+    vb.cpus = 2
   #   # Customize the amount of memory on the VM:
-    vb.memory = "2048"
+    vb.memory = 2048
   end
   #
   # View the documentation for the provider you are using for more
@@ -72,8 +73,21 @@ Vagrant.configure("2") do |config|
   # Enable provisioning with a shell script. Additional provisioners such as
   # Ansible, Chef, Docker, Puppet and Salt are also available. Please see the
   # documentation for more information about their specific syntax and use.
-  # config.vm.provision "shell", inline: <<-SHELL
-  #   apt-get update
-  #   apt-get install -y apache2
-  # SHELL
+
+  config.vm.provision "file", source: "vagrant.pub", destination: "~/.ssh/id_rsa.pub"
+  config.vm.provision "shell", privileged: false, path: "init.sh"
+
+  (1..pod_count).each do |i|
+    config.vm.define "pod-#{i}" do |node|
+      node.vm.hostname = "pod-#{i}.local"
+      node.vm.network "private_network", ip: "192.168.35.#{base_ip + i}"
+    end
+  end
+  
+  config.vm.define "control" do |node|
+    node.vm.hostname = "control.local"
+    node.vm.network "private_network", ip: "192.168.35.#{base_ip}"
+    node.vm.synced_folder "control", "/vagrant", type: "rsync", owner: "vagrant", group: "vagrant"
+    node.vm.provision "shell", privileged: false, path: "control/init.sh"
+  end
 end
