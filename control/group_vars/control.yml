@@ -1,0 +1,6 @@
+host:
+  owner: vagrant
+  group: vagrant
+  
+prometheus_lib_dir: /usr/share/prometheus
+grafana_lib_dir: /usr/share/grafana
