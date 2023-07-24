@@ -1,0 +1,6 @@
+Django >= 4
+celery
+djangorestframework
+django-cacheops
+pymysql
+redis
