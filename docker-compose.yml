@@ -1,0 +1,37 @@
+version: "3"
+services:
+  mysql:
+    image: mysql:8
+    container_name: mysql
+    volumes:
+      - mysql-data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=secret%1
+      - MYSQL_DATABASE=docker_mgmt
+      - MYSQL_USER=dba
+      - MYSQL_PASSWORD=dba@secret
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+  
+  app:
+    image: grepp/docker_mgmt:dyheo-0.1
+    container_name: app
+    volumes:
+      - app-data:/data
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - mysql
+      - redis
+
+volumes:
+  mysql-data:
+  redis-data:
+  app-data:
+
