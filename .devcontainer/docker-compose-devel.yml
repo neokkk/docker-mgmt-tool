@@ -1,7 +1,7 @@
 version: "3"
 services:
   app:
-    command: ["/bin/sh", "-c", "while sleep 1000;", "do:;", "done"]
+    command: ["/bin/sh", "-c", "while true; do sleep 1000; done"]
     ports:
       - 8000:8000
     volumes:

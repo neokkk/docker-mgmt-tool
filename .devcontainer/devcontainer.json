@@ -12,13 +12,10 @@
 		"../docker-compose.yml",
 		"./docker-compose-devel.yml"
 	],
-	"features": {
-		"ghcr.io/devcontainers-contrib/features/ansible:2": {},
-		"ghcr.io/devcontainers-contrib/features/apt-packages:1": {}
-	},
 	// Features to add to the dev container. More info: https://containers.dev/features.
-	// "features": {},
-
+	"features": {
+		"ghcr.io/devcontainers-contrib/features/ansible:2": {}
+	},
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	"forwardPorts": [3000, 8000],
 
