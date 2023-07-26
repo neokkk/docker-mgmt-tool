@@ -2,6 +2,7 @@ Django >= 4
 celery
 djangorestframework
 django-cacheops
+drf-spectacular
 paramiko
 pymysql
 redis

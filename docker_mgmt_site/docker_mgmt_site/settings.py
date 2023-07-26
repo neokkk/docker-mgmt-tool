@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'baremetal'
+    'baremetal',
+    'drf_spectacular',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -130,6 +132,17 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SSH_SERVER_AUTH_KEY = os.environ.get("SSH_SERVER_AUTH_KEY", "/workspace/vm_rsa")
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Docker Management API',
+    'DESCRIPTION': 'Docker Management API',
+    'VERSION': '0.0.1',
+    'SERVICE_INCLUDE_SCHEMA': False,
+}
 
 pymysql.install_as_MySQLdb()
 
