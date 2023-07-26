@@ -32,7 +32,7 @@ def run_playbook(inventory_path: str, group: str, roles: List[Role]) -> bool:
         f"  become: yes",
         f"  roles:",
       ] + [
-        f"    - {role.name}" for role in roles
+        f"    - {role.path}" for role in roles
       ])
       f.write(f"\n")
   except:
