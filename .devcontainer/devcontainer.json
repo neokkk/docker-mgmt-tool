@@ -9,7 +9,7 @@
 	// 	"dockerfile": "../Dockerfile"
 	// },
 	"dockerComposeFile": [
-		"../docker-compose.yml",
+		// "../docker-compose.yml",
 		"./docker-compose-devel.yml"
 	],
 	// Features to add to the dev container. More info: https://containers.dev/features.
@@ -27,7 +27,7 @@
 
 	// Uncomment to connect as an existing user other than the container default. More info: https://aka.ms/dev-containers-non-root.
 	// "remoteUser": "devcontainer"
-	"service": "app",
+	"service": "react",
 	"shutdownAction": "stopCompose",
 	"workspaceFolder": "/workspace"
 }
