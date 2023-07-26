@@ -2,9 +2,12 @@ import subprocess
 from typing import List, Union
 from .setup import Server
 
+class Role:
+  name: str
+  path: str
+  description: str
+  
 def create_inventory(server: Union[List[Server], Server], group="managed") -> str:
-  print(server)
-  print(group)
   path = "/tmp/inventory"
   
   with open(path, "w") as f:
@@ -19,7 +22,7 @@ def create_inventory(server: Union[List[Server], Server], group="managed") -> st
     
   return path
 
-def run_playbook(workdir: str, group: str, roles: List[str]) -> bool:
+def run_playbook(inventory_path: str, group: str, roles: List[Role]) -> bool:
   playbook_path = "/tmp/playbook.yml"
   
   try:
@@ -29,14 +32,15 @@ def run_playbook(workdir: str, group: str, roles: List[str]) -> bool:
         f"  become: yes",
         f"  roles:",
       ] + [
-        f"    - {role}" for role in roles
+        f"    - {role.name}" for role in roles
       ])
       f.write(f"\n")
   except:
     return False
   
   try:
-    # subprocess.run(f"ansible-playbook -i {create_inventory(group)} {playbook_path}", cwd=workdir)
+    print("run playbook!")
+    subprocess.run(f"ansible-playbook -i {inventory_path} {playbook_path}", shell=True)
     return True
   except:
     return False
