@@ -18,6 +18,15 @@
 	},
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	"forwardPorts": [3000, 8000],
+	"service": "app",
+	"workspaceFolder": "/workspace",
+	"shutdownAction": "stopCompose",
+	"features": {
+		// "ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
+		// 	"packages": "python3-pip,python3-dev"
+		// },
+		"ghcr.io/devcontainers-contrib/features/ansible:2": {}
+	},
 
 	// Uncomment the next line to run commands after the container is created.
 	// "postCreateCommand": "cat /etc/os-release",
