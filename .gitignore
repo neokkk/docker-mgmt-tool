@@ -1,4 +1,5 @@
 .vagrant
+vagrant
 vm_rsa*
 
-__pycache__/
+__pycache__
