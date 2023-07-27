@@ -2,10 +2,11 @@
 
 export DEBIAN_FRONTEND=noninteractive
 
+USER=vagrant
+HOME=/home/$USER
+
 sudo apt update
-sudo apt install -y ca-certificates apt-transport-https \
-  software-properties-common libnss-mdns curl wget \
-  python3-pip python-is-python3
+sudo apt install -y curl ca-certificates apt-transport-https
 
 # install docker
 sudo install -m 0755 -d /etc/apt/keyrings
@@ -17,8 +18,8 @@ echo \
   "$(lsb_release -cs)" stable" | \
   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
-sudo apt-get update
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y 
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 sudo usermod -aG docker $USER
 
@@ -27,15 +28,11 @@ mkdir $HOME/.docker
 sudo chown "$USER":"$USER" /home/"$USER"/.docker -R
 sudo chmod g+rwx "$HOME/.docker" -R
 
-sudo systemctl enable docker.service
-sudo systemctl enable containerd.service
+sudo systemctl enable docker
+sudo systemctl enable containerd
 
 # install ansible
 sudo add-apt-repository --yes --update ppa:ansible/ansible
 sudo apt install -y ansible
 sudo pip3 install docker
 sudo ansible-galaxy collection install community.docker
-
-# for ansible
-cd .ssh
-cat id_rsa.pub >> authorized_keys

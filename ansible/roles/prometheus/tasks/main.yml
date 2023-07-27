@@ -1,0 +1,44 @@
+- name: Make sharing directory
+  file:
+    path: "{{ lib_dir }}"
+    state: directory
+    mode: "777"
+    owner: "{{ host.owner }}"
+    group: "{{ host.group }}"
+
+- name: Copy config file
+  template:
+    src: templates/prometheus.yml.j2
+    dest: "{{ lib_dir }}/prometheus.yml"
+
+- name: Copy service discovery target file
+  template:
+    src: templates/targets.json.j2
+    dest: "{{ lib_dir }}/targets.json"
+
+- name: Create volume
+  community.docker.docker_volume:
+    name: prometheus-data
+
+- name: Create Prometheus container
+  community.docker.docker_container:
+    name: prometheus
+    image: prom/prometheus
+    ports:
+      - 9090:9090
+    user: root
+    state: started
+    restart_policy: unless-stopped
+    detach: true
+    command: |
+      --config.file=/etc/prometheus/prometheus.yml
+      --storage.tsdb.path=/prometheus-data
+    mounts:
+      - type: volume
+        source: prometheus-data
+        target: /prometheus-data
+    networks:
+      - name: "{{ network }}"
+    volumes:
+      - "{{ lib_dir }}/:/etc/prometheus/"
+  

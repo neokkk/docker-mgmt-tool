@@ -1,0 +1,5 @@
+host:
+  owner: vagrant
+  group: vagrant
+  
+lib_dir: /usr/share/prometheus

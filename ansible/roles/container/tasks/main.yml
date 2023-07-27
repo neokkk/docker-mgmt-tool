@@ -1,0 +1,15 @@
+- name: Upload initializer
+  copy:
+    src: /workspace/init.sh
+    dest: /tmp/init.sh
+    owner: vagrant
+    group: vagrant
+    mode: "0755"
+
+- name: Install init packages
+  command: /tmp/init.sh
+
+- name: Create docker group network
+  community.docker.docker_network:
+    name: "{{ network }}"
+    appends: true
