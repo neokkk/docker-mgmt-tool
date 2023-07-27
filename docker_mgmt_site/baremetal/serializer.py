@@ -5,7 +5,7 @@ from .models import AnsibleRole, Server
 class UserSerializer(serializers.HyperlinkedModelSerializer):
   class Meta:
     model = User
-    fields = ['url', 'username', 'email', 'groups']
+    fields = ['email', 'groups', 'url', 'username']
     
 class ServerSerializer(serializers.HyperlinkedModelSerializer):
   class Meta:
@@ -14,5 +14,5 @@ class ServerSerializer(serializers.HyperlinkedModelSerializer):
 
 class AnsibleRoleSerializer(serializers.HyperlinkedModelSerializer):
   class Meta:
-      model = AnsibleRole
-      fields = '__all__'
+    model = AnsibleRole
+    fields = '__all__'

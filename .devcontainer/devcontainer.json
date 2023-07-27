@@ -29,5 +29,16 @@
 	// "remoteUser": "devcontainer"
 	"service": "app",
 	"shutdownAction": "stopCompose",
-	"workspaceFolder": "/workspace"
+	"workspaceFolder": "/workspace",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-python.vscode-pylance",
+				"ms-python.python",
+				"donjayamanne.python-environment-manager",
+				"donjayamanne.python-extension-pack",
+				"KevinRose.vsc-python-indent"
+			]
+		}
+	}
 }

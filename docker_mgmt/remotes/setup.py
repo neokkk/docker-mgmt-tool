@@ -1,6 +1,4 @@
-from django.core.serializers.json import DjangoJSONEncoder
 import json
-from os import path
 import paramiko
 import subprocess
 from typing import List, Optional
@@ -18,7 +16,7 @@ class CPU:
   model: str
   
   def __str__(self):
-    return json.dumps(self, cls=DjangoJSONEncoder)
+    return json.dumps(self)
 
   def to_dict(self):
     return dict({
@@ -34,7 +32,7 @@ class Disk:
   used: str
   
   def __str__(self):
-    return json.dumps(self, cls=DjangoJSONEncoder)
+    return json.dumps(self)
   
   def __init__(self, dev: str, size: str, used: str='0'):
     self.dev = dev
@@ -49,14 +47,14 @@ class Disk:
     })
     
 class Server:
-  hostname: str
+  name: str
   ip_address: str
   cpu: CPU
-  memory_total: int # kb
+  memory_total: str
   disks: Optional[List[Disk]]
   
   def __str__(self):
-    return json.dumps(self, cls=DjangoJSONEncoder)
+    return json.dumps(self)
 
 def default_process(line: str) -> str:
   return line
@@ -95,8 +93,8 @@ def get_server_info() -> Server:
   server_infos = [
     ['hostname', 'hostname -f', default_process],
     ['ip_address', 'hostname -I | awk \'{ for (i=1; i<=NF; i++) { split($i, arr, "."); if (arr[1] >= 192 && arr[1] < 255) print $i } }\'', default_process],
-    ['memory_total', 'cat /proc/meminfo | grep "MemTotal" | awk \'{ print $2 }\'', lambda line: int(line)],
-    ['disks', 'lsblk | awk \'/disk/ { print $1 " " $4 }\'', lambda line: Disk(line.split(' ')[0], line.split(' ')[1])]]
+    ['memory_total', 'cat /proc/meminfo | grep "MemTotal" | awk \'{ print $2 * 1024 }\'', lambda line: int(line)],
+    ['disks', 'lsblk -b | awk \'/disk/ { print $1 " " $4 }\'', lambda line: Disk(line.split(' ')[0], line.split(' ')[1])]]
   
   for info in cpu_infos:
     setattr(cpu, info[0], ssh_exec(client, *info[1:])[0])
@@ -110,8 +108,8 @@ def get_server_info() -> Server:
   server.cpu = cpu
   return server
 
-def set_dns_hostname(server: Server) -> bool:
-  entry = f'{server.ip_address} {server.hostname}'
+def set_dns_host(server: Server) -> bool:
+  entry = f'{server.ip_address} {server.name}'
   if subprocess.run(f'grep -q "{entry}" {dns_config_file}', shell=True).returncode == 0:
     print('already exists')
     return False
@@ -119,6 +117,6 @@ def set_dns_hostname(server: Server) -> bool:
   return True
   
 def unset_dns_host(server: Server) -> bool:
-  entry = f'{server.ip_address} {server.hostname}'
+  entry = f'{server.ip_address} {server.name}'
   subprocess.run(f'sudo sed -i \'s/{entry}//\' /etc/hosts', shell=True)
   

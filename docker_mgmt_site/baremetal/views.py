@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from .models import Server
+from .models import AnsibleRole, Server
 from .serializer import AnsibleRoleSerializer, ServerSerializer, UserSerializer
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -11,7 +11,7 @@ class UserViewSet(viewsets.ModelViewSet):
   permission_classes = []
   
 class ServerViewSet(viewsets.ModelViewSet):
-  queryset = Server.objects.all().order_by('hostname')
+  queryset = Server.objects.all().order_by('name')
   serializer_class = ServerSerializer
   permission_classes = []
   
@@ -29,6 +29,6 @@ class ServerViewSet(viewsets.ModelViewSet):
     return Response(status=204)
   
 class AnsibleRoleViewSet(viewsets.ModelViewSet):
-  queryset = Server.objects.all().order_by('name')
-  serializer_class = ServerSerializer
+  queryset = AnsibleRole.objects.all().order_by('name')
+  serializer_class = AnsibleRoleSerializer
   permission_classes = []    

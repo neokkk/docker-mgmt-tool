@@ -11,16 +11,16 @@ class AnsibleRole(models.Model, ansible.Role):
     return self.name
 
 class Server(models.Model, setup.Server):
-  hostname = models.CharField(max_length=200, unique=True, help_text='alias로 사용할 서버 이름')
+  name = models.CharField(max_length=200, unique=True, help_text='alias로 사용할 서버 이름')
   ip_address = models.CharField(max_length=200, help_text='서버의 IP 주소 혹은 도메인 이름')
   cpu = models.JSONField(null=True, blank=True, help_text='CPU 정보')
-  memory_total = models.IntegerField(null=True, blank=True, help_text='총 메모리 용량 (KB)')
-  disks = models.JSONField(null=True, blank=True, help_text='디스크 정보')
-  labels = models.CharField(max_length=200, default='')
+  memory_total = models.IntegerField(null=True, blank=True, help_text='총 메모리 용량 (B)')
+  disks = models.JSONField(null=True, blank=True, help_text='디스크 정보 (dev: 디바이스, size: 크기(B), used: 사용량(B))')
+  labels = models.CharField(max_length=200, default='', help_text='레이블')
   roles = models.ManyToManyField('AnsibleRole', null=True, blank=True)
     
   def __str__(self) -> str:
-    return f'{self.hostname} - {self.ip_address}'
+    return f'{self.name} - {self.ip_address}'
   
   def save(self, *args, **kwargs) -> None:
     is_created = not self.pk
@@ -32,8 +32,8 @@ class Server(models.Model, setup.Server):
       if server is None:
         raise IntegrityError('Could not get server info')
 
-      server.hostname = self.hostname
-      setup.set_dns_hostname(server)
+      server.name = self.name
+      setup.set_dns_host(server)
     
     for info in ['memory_total']:
       setattr(self, info, getattr(server, info))

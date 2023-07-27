@@ -12,12 +12,12 @@ def create_inventory(server: Union[List[Server], Server], group="managed") -> st
   
   with open(path, "w") as f:
     if isinstance(server, list):
-      hostnames = [s.hostname for s in server]
+      names = [s.name for s in server]
     else:
-      hostnames = [server.hostname]
+      names = [server.name]
 
     f.write(f"[{group}]\n")
-    f.write('\n'.join(hostnames))
+    f.write('\n'.join(names))
     f.write('\n')
     
   return path
