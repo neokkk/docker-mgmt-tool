@@ -1,9 +1,17 @@
 version: "3"
 services:
   app:
-    command: ["/bin/sh", "-c", "while true; do sleep 1000; done"]
+    command: ["sh", "-c", "while true; do sleep 1000; done"]
     ports:
       - 8000:8000
     volumes:
       - app-data:/data
+      - .:/workspace:cached
+  react:
+    image: mcr.microsoft.com/devcontainers/typescript-node:18
+    container_name: react
+    ports:
+      - 3000:3000
+    command: ["sh", "-c", "while true; do sleep 1000; done"]
+    volumes:
       - .:/workspace:cached
