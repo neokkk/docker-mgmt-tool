@@ -118,5 +118,5 @@ def set_dns_host(server: Server) -> bool:
   
 def unset_dns_host(server: Server) -> bool:
   entry = f'{server.ip_address} {server.name}'
-  subprocess.run(f'sudo sed -i \'s/{entry}//\' /etc/hosts', shell=True)
+  return subprocess.run(f'sudo sed -i \'s/{entry}//\' /etc/hosts', shell=True).returncode == 0
   

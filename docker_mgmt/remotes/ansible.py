@@ -8,11 +8,6 @@ class Role:
   path: str
   description: str
   
-  def __init__(self, name: str, path: str, description: str):
-    self.name = name
-    self.path = path
-    self.description = description
-    
   def __str__(self):
     return f'Role(name={self.name}, path={self.path}, description={self.description})'
 
@@ -49,7 +44,7 @@ def run_playbook(inventory_file: str, groupname: str, roles: List[Role]) -> bool
   try:
     print('run playbook!')
     environ['ANSIBLE_CONFIG'] = '/workspace/ansible.cfg'
-    subprocess.run(f'ansible-playbook -i {inventory_file} {playbook_file} -e "network={groupname}" -u vagrant', shell=True)
+    subprocess.run(f'ansible-playbook -i {inventory_file} {playbook_file} -e "network={groupname}" -u vagrant -vvv', shell=True)
     return True
   except:
     return False

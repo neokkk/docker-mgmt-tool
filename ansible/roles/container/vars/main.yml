@@ -1,0 +1,4 @@
+host:
+  user: vagrant
+  owner: vagrant
+  group: vagrant

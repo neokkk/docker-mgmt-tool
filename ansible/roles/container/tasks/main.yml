@@ -1,9 +1,9 @@
 - name: Upload initializer
-  copy:
-    src: /workspace/init.sh
+  template:
+    src: templates/init.sh.j2
     dest: /tmp/init.sh
-    owner: vagrant
-    group: vagrant
+    owner: "{{ host.owner }}"
+    group: "{{ host.group }}"
     mode: "0755"
 
 - name: Install init packages
@@ -11,5 +11,5 @@
 
 - name: Create docker group network
   community.docker.docker_network:
-    name: "{{ network }}"
+    name: "{{ network }}" # external variable
     appends: true

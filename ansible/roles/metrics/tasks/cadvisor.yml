@@ -1,4 +1,4 @@
-- name: Create CAdvisor container
+- name: Create cadvisor container
   community.docker.docker_container:
     name: cadvisor
     image: gcr.io/cadvisor/cadvisor
@@ -15,3 +15,5 @@
       - /sys:/sys:ro
       - /var/run:/var/run:ro
       - /var/lib/docker:/var/lib/docker:ro
+
+- 

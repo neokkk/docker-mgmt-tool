@@ -25,19 +25,19 @@
     restart_policy: unless-stopped
     detach: true
     ports:
-      - 3000:3000
+      - "{{ host_port }}":"{{ container_port }}"
     networks:
       - name: "{{ network }}"
     volumes:
       - "{{ lib_dir }}:/var/lib/grafana"
 
-# - name: Add Prometheus datasource
-#   community.docker.docker_container_exec:
-#     container: grafana
-#     command: |
-#       curl -L \
-#         -H "Content-Type: application/json" \
-#         -H "Accept: application/json" \
-#         -d @/var/lib/grafana/datasource.json \
-#         localhost:3000/api/datasources \
-#         -u admin:secretsecret
+- name: Add prometheus datasource
+  community.docker.docker_container_exec:
+    container: grafana
+    command: |
+      curl -L \
+        -H "Content-Type: application/json" \
+        -H "Accept: application/json" \
+        -d @"/var/lib/grafana/datasource.json" \
+        "localhost:{{ host_port }}/api/datasources" \
+        -u admin:secretsecret

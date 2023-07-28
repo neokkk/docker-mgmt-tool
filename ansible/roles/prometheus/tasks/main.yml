@@ -6,6 +6,10 @@
     owner: "{{ host.owner }}"
     group: "{{ host.group }}"
 
+- name: Set host ip address value
+  set_fact:
+    host_ip: "{{ ansible_all_ipv4_addresses | select('match', '^192\\.') | list | first }}"
+
 - name: Copy config file
   template:
     src: templates/prometheus.yml.j2
@@ -20,12 +24,12 @@
   community.docker.docker_volume:
     name: prometheus-data
 
-- name: Create Prometheus container
+- name: Create prometheus container
   community.docker.docker_container:
     name: prometheus
     image: prom/prometheus
     ports:
-      - 9090:9090
+      - "{{ host_port }}:{{ container_port }}"
     user: root
     state: started
     restart_policy: unless-stopped
@@ -41,4 +45,19 @@
       - name: "{{ network }}"
     volumes:
       - "{{ lib_dir }}/:/etc/prometheus/"
-  
+
+- name: Add file service discovery directory
+  file:
+    state: directory
+    path: /etc/prometheus/file_sd
+
+- name: Copy docker daemon.json template
+  template:
+    src: templates/daemon.json.j2
+    dest: /etc/docker/daemon.json
+
+- name: Register as a systemd service
+  systemd:
+    name: docker
+    state: restarted
+    daemon_reload: true

@@ -3,4 +3,6 @@ host:
   group: vagrant
 
 lib_dir: /usr/share/grafana
-  
+
+host_port: "3100"
+container_port: "3000"

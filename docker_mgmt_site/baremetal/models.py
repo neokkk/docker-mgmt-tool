@@ -1,10 +1,11 @@
 from django.db import IntegrityError, models
 import docker_mgmt.remotes.ansible as ansible
 import docker_mgmt.remotes.setup as setup
+from typing import List, Optional
 
 class AnsibleRole(models.Model, ansible.Role):
-  name = models.CharField(max_length=200)
-  path = models.CharField(max_length=250, unique=True)
+  name = models.CharField(max_length=200, unique=True)
+  path = models.CharField(max_length=250)
   description = models.TextField(null=True, blank=True)
   
   def __str__(self) -> str:
@@ -35,22 +36,24 @@ class Server(models.Model, setup.Server):
       server.name = self.name
       setup.set_dns_host(server)
     
-    for info in ['memory_total']:
-      setattr(self, info, getattr(server, info))
+      for info in ['memory_total']:
+        setattr(self, info, getattr(server, info))
 
-    self.cpu = server.cpu.to_dict()
-    self.disks = [disk.to_dict() for disk in server.disks]
+      self.cpu = server.cpu.to_dict()
+      self.disks = [disk.to_dict() for disk in server.disks]
     
     super().save(*args, **kwargs)
     
-    if is_created and self.roles.exists():
-      self.provision()
+    roles = list(Server.objects.prefetch_related('roles').get(pk=self.pk).roles.all())
+    print(roles)
+    if len(roles) > 0:
+      self.provision(roles)
 
   def delete(self, *args, **kwargs) -> None:
     # setup.unset_dns_host(self)
     super().delete(*args, **kwargs)
   
-  def provision(self):
+  def provision(self, roles: Optional[List[AnsibleRole]]=None):
     groupname = 'managed'
     inventory_path = ansible.create_inventory(self, groupname)
-    ansible.run_playbook(inventory_path, groupname, self.roles)
+    ansible.run_playbook(inventory_path, groupname, roles)

@@ -1,5 +1,12 @@
 host:
   owner: vagrant
   group: vagrant
-  
+
 lib_dir: /usr/share/prometheus
+
+host_port: "9090"
+container_port: "9090"
+
+metrics_port: "9323"
+node_exporter_port: "9100"
+cadvisor_port: "8888"

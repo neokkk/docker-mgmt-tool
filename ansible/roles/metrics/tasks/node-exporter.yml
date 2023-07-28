@@ -1,6 +1,6 @@
-- name: Create NodeExporter container
+- name: Create node-exporter container
   community.docker.docker_container:
-    name: node-exporter
+    name: node_exporter
     image: quay.io/prometheus/node-exporter
     restart_policy: unless-stopped
     detach: true
