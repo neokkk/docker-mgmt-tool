@@ -45,7 +45,6 @@ class Server(models.Model, setup.Server):
     super().save(*args, **kwargs)
     
     roles = list(Server.objects.prefetch_related('roles').get(pk=self.pk).roles.all())
-    print(roles)
     if len(roles) > 0:
       self.provision(roles)
 

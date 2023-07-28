@@ -6,7 +6,7 @@
     owner: "{{ host.owner }}"
     group: "{{ host.group }}"
 
-- name: Set host ip address value
+- name: Set host ip address variable
   set_fact:
     host_ip: "{{ ansible_all_ipv4_addresses | select('match', '^192\\.') | list | first }}"
 
@@ -50,8 +50,9 @@
   file:
     state: directory
     path: /etc/prometheus/file_sd
+    owner: "{{ host.owner }}"
 
-- name: Copy docker daemon.json template
+- name: Copy docker daemon.json
   template:
     src: templates/daemon.json.j2
     dest: /etc/docker/daemon.json

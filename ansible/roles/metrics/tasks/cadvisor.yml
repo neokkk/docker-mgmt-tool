@@ -15,5 +15,3 @@
       - /sys:/sys:ro
       - /var/run:/var/run:ro
       - /var/lib/docker:/var/lib/docker:ro
-
-- 

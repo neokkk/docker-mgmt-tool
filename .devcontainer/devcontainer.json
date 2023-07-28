@@ -9,7 +9,7 @@
 	// 	"dockerfile": "../Dockerfile"
 	// },
 	"dockerComposeFile": [
-		// "../docker-compose.yml",
+		"../docker-compose.yml",
 		"./docker-compose-devel.yml"
 	],
 	// Features to add to the dev container. More info: https://containers.dev/features.
@@ -22,7 +22,7 @@
 	// Uncomment the next line to run commands after the container is created.
 	// "postCreateCommand": "cat /etc/os-release",
 
-	"service": "app",
+	"service": "react",
 	"shutdownAction": "stopCompose",
 	"workspaceFolder": "/workspace",
 	
@@ -35,7 +35,8 @@
 				"ms-python.vscode-pylance",
 				"donjayamanne.python-environment-manager",
 				"donjayamanne.python-extension-pack",
-				"KevinRose.vsc-python-indent"
+				"KevinRose.vsc-python-indent",
+				"esbenp.prettier-vscode"
 			]
 		}
 	}

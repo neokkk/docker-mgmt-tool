@@ -3,3 +3,5 @@ vagrant
 vm_rsa*
 
 __pycache__
+
+.pnpm-store
