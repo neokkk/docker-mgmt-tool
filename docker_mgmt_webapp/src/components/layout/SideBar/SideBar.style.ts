@@ -7,6 +7,16 @@ const Container = styled.aside`
   padding: 20px;
 `;
 
+const MenuList = styled.ul`
+  list-style: none;
+  text-decoration: none;
+
+  .active {
+    font-weight: 700;
+  }
+`;
+
 export default {
   Container,
+  MenuList,
 };

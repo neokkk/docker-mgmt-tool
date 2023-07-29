@@ -1,11 +1,11 @@
-import ServerList from '../components/ServerList';
-import Layout from '../components/layout';
+import EmbeddedCard from '@/components/EmbeddedCard';
+import Layout from '@/components/layout';
 
 const Root = () => {
   return (
     <Layout>
-      <p>Root</p>
-      <ServerList />
+      <EmbeddedCard name="cpu" panelId={14} />
+      <EmbeddedCard name="memory" panelId={16} />
     </Layout>
   );
 };
