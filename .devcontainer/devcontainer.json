@@ -22,7 +22,7 @@
 	// Uncomment the next line to run commands after the container is created.
 	// "postCreateCommand": "cat /etc/os-release",
 
-	"service": "react",
+	"service": "app",
 	"shutdownAction": "stopCompose",
 	"workspaceFolder": "/workspace",
 	

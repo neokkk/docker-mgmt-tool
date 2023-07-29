@@ -33,13 +33,13 @@
     volumes:
       - "{{ lib_dir }}:/var/lib/grafana"
 
-- name: Add prometheus datasource
-  community.docker.docker_container_exec:
-    container: grafana
-    command: |
-      curl
-        -X POST
-        -L localhost:{{ container_port }}/api/datasources
-        -H 'Content-Type: application/json'
-        -d @/var/lib/grafana/datasource.json
-        -u admin:secretsecret
+# - name: Add prometheus datasource
+#   community.docker.docker_container_exec:
+#     container: grafana
+#     command: |
+#       curl
+#         -X POST
+#         -L localhost:{{ container_port }}/api/datasources
+#         -H 'Content-Type: application/json'
+#         -d @/var/lib/grafana/datasource.json
+#         -u admin:secretsecret
