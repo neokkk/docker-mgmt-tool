@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "allowImportingTsExtensions": true,
+    "baseUrl": ".",
     "isolatedModules": true,
     "jsx": "react-jsx",
     "jsxImportSource": "@emotion/react",
@@ -11,6 +12,9 @@
     "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "paths": {
+      "@/*": ["src/*"],
+    },
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
