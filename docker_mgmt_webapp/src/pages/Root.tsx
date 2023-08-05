@@ -1,5 +1,5 @@
 import EmbeddedCard from '@/components/EmbeddedCard';
-import Layout from '@/components/layout';
+import Layout from '@/components/layout/Layout';
 
 const Root = () => {
   return (

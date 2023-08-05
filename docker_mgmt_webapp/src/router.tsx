@@ -1,7 +1,7 @@
+import { createBrowserRouter } from 'react-router-dom';
 import Containers from './pages/Containers.tsx';
 import Nodes from './pages/Nodes.tsx';
 import Root from './pages/Root.tsx';
-import { createBrowserRouter } from 'react-router-dom';
 
 const router = createBrowserRouter([
   {
@@ -13,11 +13,31 @@ const router = createBrowserRouter([
     id: 'containers',
     path: '/containers',
     element: <Containers />,
+    children: [
+      {
+        id: 'index_containers',
+        index: true,
+      },
+      {
+        id: 'named_containers',
+        path: ':name',
+      },
+    ],
   },
   {
     id: 'nodes',
     path: '/nodes',
     element: <Nodes />,
+    children: [
+      {
+        id: 'index_nodes',
+        index: true,
+      },
+      {
+        id: 'named_nodes',
+        path: ':name',
+      },
+    ],
   },
 ]);
 

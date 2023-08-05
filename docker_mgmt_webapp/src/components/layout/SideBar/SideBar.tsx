@@ -7,7 +7,7 @@ const SideBar = () => {
     <Style.Container>
       <Style.MenuList>
         {router.routes.map((route) => (
-          <li>
+          <li key={route.id}>
             <NavLink to={route.path!} className={({ isActive }) => (isActive ? 'active' : '')}>
               {route.id}
             </NavLink>

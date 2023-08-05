@@ -1,6 +1,17 @@
 import styled from '@emotion/styled';
 
 const Container = styled.div`
+`;
+
+const Nav = styled.nav`
+  display: flex;
+  gap: 16px;
+  list-tyle: none;
+  margin: 0 0 16px;
+  padding: 0;
+`;
+
+const List = styled.ul`
   width: 100%;
   height: 100%;
   display: grid;
@@ -14,4 +25,6 @@ const Container = styled.div`
 
 export default {
   Container,
+  List,
+  Nav,
 };
