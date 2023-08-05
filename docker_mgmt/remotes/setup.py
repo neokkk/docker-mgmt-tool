@@ -10,10 +10,10 @@ client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 client.load_system_host_keys()
 
 class CPU:
-  core: int
-  clock: str
-  vendor: str
-  model: str
+  core: int = 0
+  clock: str = ""
+  vendor: str = ""
+  model: str = ""
   
   def __str__(self):
     return json.dumps(self)
@@ -46,15 +46,33 @@ class Disk:
       "used": self.used,
     })
     
+class ServerEncoder(json.JSONEncoder):
+  def default(self, obj):
+    if isinstance(obj, Server):
+      return obj.to_dict()
+    return json.JSONEncoder.default(self, obj)
+    
 class Server:
-  name: str
-  ip_address: str
-  cpu: CPU
-  memory_total: str
-  disks: Optional[List[Disk]]
+  name: str = ""
+  ip_address: str = ""
+  cpu: CPU = CPU()
+  memory_total: str = ""
+  disks: Optional[List[Disk]] = None
   
   def __str__(self):
-    return json.dumps(self)
+    if self.name is None:
+      return ""
+    else:
+      return self.name
+  
+  def to_dict(self):
+    return dict({
+      "name": self.name,
+      "ip_address": self.ip_address,
+      "cpu": self.cpu,
+      "memory_total": self.memory_total,
+      "disks": self.disks,
+    })
 
 def default_process(line: str) -> str:
   return line
@@ -92,18 +110,20 @@ def get_server_info() -> Server:
   ]
   server_infos = [
     ["hostname", "hostname -f", default_process],
-    ["ip_address", "hostname -I | awk '{ for (i=1; i<=NF; i++) { split($i, arr, '.'); if (arr[1] >= 192 && arr[1] < 255) print $i } }'", default_process],
-    ["memory_total", "cat /proc/meminfo | grep 'MemTotal' | awk '{ print $2 * 1024 }'", lambda line: int(line)],
+    ["ip_address", "hostname -I | awk '{ for (i=1; i<=NF; i++) { split($i, arr, \".\"); if (arr[1] >= 192 && arr[1] < 255) print $i } }'", default_process],
+    ["memory_total", "cat /proc/meminfo | grep 'MemTotal' | awk '{ print $2 * 1024 }'", default_process],
     ["disks", "lsblk -b | awk '/disk/ { print $1 \" \" $4 }'", lambda line: Disk(line.split(" ")[0], line.split(" ")[1])]]
   
   for info in cpu_infos:
-    setattr(cpu, info[0], ssh_exec(client, *info[1:])[0])
+    result = ssh_exec(client, *info[1:])[0]
+    setattr(cpu, info[0], result)
   
   for info in server_infos:
+    result = ssh_exec(client, *info[1:])
     if info[0] == "disks":
-      setattr(server, info[0], ssh_exec(client, *info[1:]))
+      setattr(server, info[0], result)
     else:
-      setattr(server, info[0], ssh_exec(client, *info[1:])[0])
+      setattr(server, info[0], result[0])
 
   server.cpu = cpu
   return server

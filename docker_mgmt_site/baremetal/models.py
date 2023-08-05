@@ -17,7 +17,7 @@ class Server(models.Model, setup.Server):
   cpu = models.JSONField(null=True, blank=True, help_text="CPU 정보")
   memory_total = models.IntegerField(null=True, blank=True, help_text="총 메모리 용량 (B)")
   disks = models.JSONField(null=True, blank=True, help_text="디스크 정보 (dev: 디바이스, size: 크기(B), used: 사용량(B))")
-  labels = models.CharField(max_length=200, default="", help_text="레이블")
+  labels = models.CharField(max_length=200, default="", blank=True, help_text="레이블")
   roles = models.ManyToManyField("AnsibleRole", null=True, blank=True)
     
   def __str__(self) -> str:

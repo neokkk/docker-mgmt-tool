@@ -11,16 +11,20 @@ class UserViewSet(viewsets.ModelViewSet):
   permission_classes = []
   
 class ServerViewSet(viewsets.ModelViewSet):
-  queryset = Server.objects.all().order_by("name")
+  queryset = Server.objects.all().order_by("id")
   serializer_class = ServerSerializer
   permission_classes = []
+  
+  def create(self, request, *args, **kwargs):
+    response = super().create(request, *args, **kwargs)
+    return Response(response.data, status=status.HTTP_201_CREATED)
   
   @action(detail=True, methods=["get"], serializer_class=AnsibleRoleSerializer)
   def role(self, *args, **kwargs):
     server = self.get_object()
     roles = server.roles.all()
     serializer = AnsibleRoleSerializer(roles, many=True)
-    return Response(serializer.data)
+    return Response(serializer.data, status=status.HTTP_200_OK)
   
   @role.mapping.delete
   def clear_roles(self, *args, **kwargs):
