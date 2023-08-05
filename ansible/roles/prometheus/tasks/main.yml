@@ -1,10 +1,19 @@
+- name: Check docker group existed
+  shell: docker network ls | grep "{{ network }}"
+  register: networkls
+  ignore_errors: true
+
+- name: Create docker group network
+  community.docker.docker_network:
+    name: "{{ network }}" # external variable
+    appends: true
+  when: networkls.rc != 0
+
 - name: Make sharing directory
   file:
     path: "{{ lib_dir }}"
     state: directory
     mode: "777"
-    owner: "{{ host.owner }}"
-    group: "{{ host.group }}"
 
 - name: Set host ip address variable
   set_fact:
@@ -50,7 +59,6 @@
   file:
     state: directory
     path: /etc/prometheus/file_sd
-    owner: "{{ host.owner }}"
 
 - name: Copy docker daemon.json
   template:
@@ -60,5 +68,4 @@
 - name: Register as a systemd service
   systemd:
     name: docker
-    state: restarted
     daemon_reload: true

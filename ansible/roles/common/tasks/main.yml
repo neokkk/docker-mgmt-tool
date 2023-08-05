@@ -1,0 +1,7 @@
+- name: Install apt packages
+  apt:
+    name:
+      - ca-certificates
+      - curl
+      - gnupg
+    state: latest

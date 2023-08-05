@@ -3,20 +3,16 @@
     path: "{{ lib_dir }}"
     state: directory
     mode: "777"
-    owner: "{{ host.owner }}"
-    group: "{{ host.group }}"
 
 - name: Copy env file
   template:
     src: templates/env.j2
     dest: "{{ lib_dir }}/env"
-    owner: "{{ host.owner }}"
 
 - name: Copy datasource file
   template:
     src: templates/datasource.json.j2
     dest: "{{ lib_dir }}/datasource.json"
-    owner: "{{ host.owner }}"
 
 - name: Create Grafana container
   community.docker.docker_container:

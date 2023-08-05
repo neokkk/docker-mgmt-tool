@@ -1,0 +1,20 @@
+- name: Add apt repository
+  command: add-apt-repository --yes --update ppa:ansible/ansible
+
+- name: Install python packages
+  apt:
+    name:
+      - software-properties-common
+      - python-is-python3
+      - python3-pip
+      - ansible
+    state: present
+    update_cache: yes
+
+- name: Install python docker
+  pip:
+    name: docker
+
+- name: Install ansible-galaxy community collection
+  command:
+    ansible-galaxy collection install community.docker
