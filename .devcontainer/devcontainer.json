@@ -20,7 +20,7 @@
 	"forwardPorts": [3000, 8000],
 
 	// Uncomment the next line to run commands after the container is created.
-	// "postCreateCommand": "cat /etc/os-release",
+	"postCreateCommand": "sudo cp ../configs/ssh_config/ /etc/ssh/ssh_config.d/",
 
 	"service": "app",
 	"shutdownAction": "stopCompose",
@@ -35,8 +35,7 @@
 				"ms-python.vscode-pylance",
 				"donjayamanne.python-environment-manager",
 				"donjayamanne.python-extension-pack",
-				"KevinRose.vsc-python-indent",
-				"esbenp.prettier-vscode"
+				"KevinRose.vsc-python-indent"
 			]
 		}
 	}
