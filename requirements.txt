@@ -1,7 +1,8 @@
 Django >= 4
-celery
+celery[redis]
 djangorestframework
 django-cacheops
+django-cors-headers
 drf-spectacular
 paramiko
 pymysql
