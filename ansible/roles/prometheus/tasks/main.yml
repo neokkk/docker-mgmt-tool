@@ -1,0 +1,71 @@
+- name: Check docker group existed
+  shell: docker network ls | grep "{{ network }}"
+  register: networkls
+  ignore_errors: true
+
+- name: Create docker group network
+  community.docker.docker_network:
+    name: "{{ network }}" # external variable
+    appends: true
+  when: networkls.rc != 0
+
+- name: Make sharing directory
+  file:
+    path: "{{ lib_dir }}"
+    state: directory
+    mode: "777"
+
+- name: Set host ip address variable
+  set_fact:
+    host_ip: "{{ ansible_all_ipv4_addresses | select('match', '^192\\.') | list | first }}"
+
+- name: Copy config file
+  template:
+    src: templates/prometheus.yml.j2
+    dest: "{{ lib_dir }}/prometheus.yml"
+
+- name: Copy service discovery target file
+  template:
+    src: templates/targets.json.j2
+    dest: "{{ lib_dir }}/targets.json"
+
+- name: Create volume
+  community.docker.docker_volume:
+    name: prometheus-data
+
+- name: Create prometheus container
+  community.docker.docker_container:
+    name: prometheus
+    image: prom/prometheus
+    ports:
+      - "{{ host_port }}:{{ container_port }}"
+    user: root
+    state: started
+    restart_policy: unless-stopped
+    detach: true
+    command: |
+      --config.file=/etc/prometheus/prometheus.yml
+      --storage.tsdb.path=/prometheus-data
+    mounts:
+      - type: volume
+        source: prometheus-data
+        target: /prometheus-data
+    networks:
+      - name: "{{ network }}"
+    volumes:
+      - "{{ lib_dir }}/:/etc/prometheus/"
+
+- name: Add file service discovery directory
+  file:
+    state: directory
+    path: /etc/prometheus/file_sd
+
+- name: Copy docker daemon.json
+  template:
+    src: templates/daemon.json.j2
+    dest: /etc/docker/daemon.json
+
+- name: Register as a systemd service
+  systemd:
+    name: docker
+    daemon_reload: true

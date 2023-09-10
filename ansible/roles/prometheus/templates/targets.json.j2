@@ -1,0 +1,22 @@
+[
+  {
+    "targets": [
+      "{{ host_ip }}:{{ node_exporter_port }}"
+    ],
+    "labels": {
+      "target": "node_exporter",
+      "group": "sd",
+      "type": "file"
+    }
+  },
+  {
+    "targets": [
+      "{{ host_ip }}:{{ cadvisor_port }}"
+    ],
+    "labels": {
+      "target": "cadvisor",
+      "group": "sd",
+      "type": "file"
+    }
+  }
+]

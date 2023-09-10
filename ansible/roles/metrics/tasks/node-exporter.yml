@@ -1,0 +1,12 @@
+- name: Create node-exporter container
+  community.docker.docker_container:
+    name: node_exporter
+    image: quay.io/prometheus/node-exporter
+    restart_policy: unless-stopped
+    detach: true
+    command: |
+      --path.rootfs=/host
+    pid_mode: host
+    network_mode: host
+    volumes:
+      - /:/host:ro,rslave

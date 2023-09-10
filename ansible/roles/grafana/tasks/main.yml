@@ -1,0 +1,41 @@
+- name: Make sharing directory
+  file:
+    path: "{{ lib_dir }}"
+    state: directory
+    mode: "777"
+
+- name: Copy env file
+  template:
+    src: templates/env.j2
+    dest: "{{ lib_dir }}/env"
+
+- name: Copy datasource file
+  template:
+    src: templates/datasource.json.j2
+    dest: "{{ lib_dir }}/datasource.json"
+
+- name: Create Grafana container
+  community.docker.docker_container:
+    name: grafana
+    image: grafana/grafana
+    env_file: "{{ lib_dir }}/env"
+    state: started
+    restart_policy: unless-stopped
+    detach: true
+    ports:
+      - "{{ host_port }}:{{ container_port }}"
+    networks:
+      - name: "{{ network }}"
+    volumes:
+      - "{{ lib_dir }}:/var/lib/grafana"
+
+# - name: Add prometheus datasource
+#   community.docker.docker_container_exec:
+#     container: grafana
+#     command: |
+#       curl
+#         -X POST
+#         -L localhost:{{ container_port }}/api/datasources
+#         -H 'Content-Type: application/json'
+#         -d @/var/lib/grafana/datasource.json
+#         -u admin:secretsecret
